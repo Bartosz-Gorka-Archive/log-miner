@@ -171,6 +171,23 @@ class ActivityRelationsBuilderTest {
         assertTrue(response.contains(new EntryPair(createSet(new String[]{"c", "e"}), createSet(new String[]{"d"}))));
     }
 
+    @Test
+    void receiveOnlyMaximumPairs() {
+        Scanner log = new Scanner("abef\nabecdbf\nabcedbf\nabcdebf\naebcdbf");
+        List<List<Activity>> input = new ProcessLogReader().readProcessLog(log);
+        List<EntryPair> elements = new ActivityRelationsBuilder().findRelationsBasedOnLog(input);
+
+        List<EntryPair> response = new ActivityRelationsBuilder().selectOnlyMaximumElements(elements);
+
+        assertEquals(5, response.size());
+
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"a"}), createSet(new String[]{"e"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"c"}), createSet(new String[]{"d"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"e"}), createSet(new String[]{"f"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"a", "d"}), createSet(new String[]{"b"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"b"}), createSet(new String[]{"c", "f"}))));
+    }
+
     /**
      * Private function to prepare set of activities based on list of strings (names)
      *

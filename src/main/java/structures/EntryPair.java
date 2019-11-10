@@ -1,5 +1,6 @@
 package structures;
 
+import java.util.Iterator;
 import java.util.Set;
 
 public class EntryPair {
@@ -33,5 +34,37 @@ public class EntryPair {
         EntryPair struct = ((EntryPair) obj);
         return struct.getLeft().equals(this.getLeft())
                 && struct.getRight().equals(this.getRight());
+    }
+
+    /**
+     * Translate internal structure to expected form ({a, b}, {c})
+     *
+     * @return Pretty formatted pair
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("({");
+
+        Iterator<Activity> iterator = this.getLeft().iterator();
+        while (iterator.hasNext()) {
+            builder.append(iterator.next().activityName());
+            if (iterator.hasNext()) {
+                builder.append(", ");
+            }
+        }
+
+        builder.append("}, {");
+
+        iterator = this.getRight().iterator();
+        while (iterator.hasNext()) {
+            builder.append(iterator.next().activityName());
+            if (iterator.hasNext()) {
+                builder.append(", ");
+            }
+        }
+
+        builder.append("})");
+        return builder.toString();
     }
 }
