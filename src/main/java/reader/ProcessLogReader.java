@@ -26,7 +26,7 @@ public class ProcessLogReader implements ReadLogFile {
     }
 
     private List<Activity> stringCaseToActivityList(String caseRecord) {
-        List<Activity> activityInCase = new LinkedList<>();
+        List<Activity> activityInCase = new ArrayList<>();
 
         for (String name : caseRecord.split("(?!^)")) {
             if (!name.trim().equals(""))
