@@ -221,4 +221,37 @@ public class ActivityRelationsBuilder {
                 relation.getSuccessor().equals(successor) &&
                 relation.getRelationType().equals(relationType));
     }
+
+    /**
+     * Based on list of pairs return only pairs with maximum count elements.
+     *
+     * @param pairs List of relations which we can find between activities
+     * @return List of maximum count relations which we can find between activities
+     */
+    public List<EntryPair> selectOnlyMaximumElements(List<EntryPair> pairs) {
+        List<EntryPair> maximumElements = new ArrayList<>();
+        int totalElements = pairs.size();
+
+        for (int indexFirstElement = 0; indexFirstElement < totalElements; indexFirstElement++) {
+            EntryPair firstPair = pairs.get(indexFirstElement);
+            boolean isMaximum = true;
+
+            for (int indexSecondElement = 0; indexSecondElement < totalElements; indexSecondElement++) {
+                if (indexFirstElement == indexSecondElement) continue;
+
+                EntryPair secondPair = pairs.get(indexSecondElement);
+                // If second rule contain all elements (probably also some extra) - we are not maximum
+                if (secondPair.getLeft().containsAll(firstPair.getLeft()) && secondPair.getRight().containsAll(firstPair.getRight())) {
+                    isMaximum = false;
+                    break;
+                }
+            }
+
+            if (isMaximum) {
+                maximumElements.add(firstPair);
+            }
+        }
+
+        return maximumElements;
+    }
 }
