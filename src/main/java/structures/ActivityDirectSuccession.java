@@ -1,15 +1,15 @@
 package structures;
 
 public class ActivityDirectSuccession {
-    private Activity predecessor;
-    private Activity successor;
+    private final Activity predecessor;
+    private final Activity successor;
 
     /**
      * Direct succession structure.
      * You can read it as predecessor > successor, where > mean precedes.
      *
      * @param predecessor Activity which precedes
-     * @param successor Activity being preceded
+     * @param successor   Activity being preceded
      */
     public ActivityDirectSuccession(Activity predecessor, Activity successor) {
         this.predecessor = predecessor;
