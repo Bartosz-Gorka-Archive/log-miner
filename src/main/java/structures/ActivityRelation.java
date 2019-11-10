@@ -28,6 +28,10 @@ public class ActivityRelation {
         return successor;
     }
 
+    public RelationType getRelationType() {
+        return relationType;
+    }
+
     /**
      * Two objects are equal if the same class AND predecessor AND successor AND relation type are the same
      *
