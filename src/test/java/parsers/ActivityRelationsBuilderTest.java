@@ -5,8 +5,9 @@ import reader.ProcessLogReader;
 import structures.Activity;
 import structures.ActivityDirectSuccession;
 import structures.ActivityRelation;
+import structures.EntryPair;
 
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -111,9 +112,6 @@ class ActivityRelationsBuilderTest {
         List<List<Activity>> input = new ProcessLogReader().readProcessLog(log);
 
         List<ActivityRelation> response = new ActivityRelationsBuilder().generateRelationsBetweenActivities(input);
-        Comparator<ActivityRelation> comparator = Comparator.comparing(relation -> relation.getPredecessor().activityName());
-        comparator = comparator.thenComparing(relation -> relation.getSuccessor().activityName());
-        response.sort(comparator);
 
         assertEquals(5 * 5, response.size());
 
@@ -146,5 +144,45 @@ class ActivityRelationsBuilderTest {
         assertEquals(new ActivityRelation(E, C, CHOICE), response.get(22));
         assertEquals(new ActivityRelation(E, D, CAUSALITY), response.get(23));
         assertEquals(new ActivityRelation(E, E, CHOICE), response.get(24));
+    }
+
+    /**
+     * In response we expect receive each possible pair where ({left} -> {right})
+     * and both left, right has inside # as relation
+     */
+    @Test
+    void relationsBasedOnActivityLogContainAllPossibleGroups() {
+        Scanner log = new Scanner("abcd\nacbd\naed");
+        List<List<Activity>> input = new ProcessLogReader().readProcessLog(log);
+
+        List<EntryPair> response = new ActivityRelationsBuilder().findRelationsBasedOnLog(input);
+
+        assertEquals(10, response.size());
+
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"a"}), createSet(new String[]{"b"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"a"}), createSet(new String[]{"c"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"a"}), createSet(new String[]{"e"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"b"}), createSet(new String[]{"d"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"c"}), createSet(new String[]{"d"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"e"}), createSet(new String[]{"d"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"a"}), createSet(new String[]{"b", "e"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"a"}), createSet(new String[]{"c", "e"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"b", "e"}), createSet(new String[]{"d"}))));
+        assertTrue(response.contains(new EntryPair(createSet(new String[]{"c", "e"}), createSet(new String[]{"d"}))));
+    }
+
+    /**
+     * Private function to prepare set of activities based on list of strings (names)
+     *
+     * @param activities Activities names list
+     * @return Reference to HashSet
+     */
+    private HashSet<Activity> createSet(String[] activities) {
+        HashSet<Activity> set = new HashSet<>();
+        for (String name : activities) {
+            set.add(new Activity(name));
+        }
+
+        return set;
     }
 }
